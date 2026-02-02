@@ -10,22 +10,25 @@ public static class Extensions
     // Інвертування рядка
     public static string ReverseString(this string value)
     {
+        ArgumentNullException.ThrowIfNull(value);
         char[] chars = value.ToCharArray();
         Array.Reverse(chars);
         return new string(chars);
     }
 
-    // Підрахунок символів (використовує LINQ)
+    // Підрахунок символів
     public static int CountChar(this string value, char symbol)
     {
+        ArgumentNullException.ThrowIfNull(value);
         return value.Count(c => c == symbol);
     }
 
 
-    // Підрахунок значень (використовує LINQ)
+    // Підрахунок значень
     public static int CountOf<T>(this T[] array, T value)
         where T : IEquatable<T>
     {
+        ArgumentNullException.ThrowIfNull(array);
         return array.Count(item => item.Equals(value));
     }
 
@@ -33,6 +36,7 @@ public static class Extensions
     public static T[] Unique<T>(this T[] array)
         where T : IEquatable<T>
     {
+        ArgumentNullException.ThrowIfNull(array);
         var result = new List<T>();
 
         foreach (var item in array)

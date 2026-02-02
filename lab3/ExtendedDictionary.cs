@@ -12,9 +12,11 @@ public class ExtendedDictionary<T, U, V> : IEnumerable<ExtendedDictionaryElement
     public int Count => _items.Count;
 
     public void Add(T key, U value1, V value2)
-    {   
+    {
+        ArgumentNullException.ThrowIfNull(key);
+        
         if (ContainsKey(key))
-            throw new ArgumentException("Key already exists");
+            throw new ArgumentException("Key already exists", nameof(key));
 
         var element = new ExtendedDictionaryElement<T, U, V>(key, value1, value2);
         _items.Add(key, element);
@@ -22,11 +24,13 @@ public class ExtendedDictionary<T, U, V> : IEnumerable<ExtendedDictionaryElement
 
     public bool Remove(T key)
     {
+        ArgumentNullException.ThrowIfNull(key);
         return _items.Remove(key);
     }
 
     public bool ContainsKey(T key)
     {
+        ArgumentNullException.ThrowIfNull(key);
         return _items.ContainsKey(key);
     }
 
@@ -45,8 +49,9 @@ public class ExtendedDictionary<T, U, V> : IEnumerable<ExtendedDictionaryElement
     {
         get
         {
+            ArgumentNullException.ThrowIfNull(key);
             if (!_items.TryGetValue(key, out var item))
-                throw new KeyNotFoundException();
+                throw new KeyNotFoundException($"Key '{key}' not found.");
             return item;
         }
     }
