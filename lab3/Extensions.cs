@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lab3;
 
@@ -14,26 +15,18 @@ public static class Extensions
         return new string(chars);
     }
 
-    // Підрахунок символів
+    // Підрахунок символів (використовує LINQ)
     public static int CountChar(this string value, char symbol)
     {
-        int count = 0;
-        foreach (var c in value)
-            if (c == symbol)
-                count++;
-        return count;
+        return value.Count(c => c == symbol);
     }
 
 
-    // Підрахунок значень (узагальнений)
+    // Підрахунок значень (використовує LINQ)
     public static int CountOf<T>(this T[] array, T value)
         where T : IEquatable<T>
     {
-        int count = 0;
-        foreach (var item in array)
-            if (item.Equals(value))
-                count++;
-        return count;
+        return array.Count(item => item.Equals(value));
     }
 
     // Унікальні елементи
