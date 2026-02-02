@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lab3;
 
 public class ExtendedDictionary<T, U, V> : IEnumerable<ExtendedDictionaryElement<T, U, V>>
+    where T : notnull
 {
-    private readonly List<ExtendedDictionaryElement<T, U, V>> _items = new();
+    private readonly Dictionary<T, ExtendedDictionaryElement<T, U, V>> _items = new();
 
     public int Count => _items.Count;
 
@@ -14,28 +16,28 @@ public class ExtendedDictionary<T, U, V> : IEnumerable<ExtendedDictionaryElement
         if (ContainsKey(key))
             throw new ArgumentException("Key already exists");
 
-        _items.Add(new ExtendedDictionaryElement<T, U, V>(key, value1, value2));
+        var element = new ExtendedDictionaryElement<T, U, V>(key, value1, value2);
+        _items.Add(key, element);
     }
 
     public bool Remove(T key)
     {
-        var item = _items.Find(x => x.Key!.Equals(key));
-        return item != null && _items.Remove(item);
+        return _items.Remove(key);
     }
 
     public bool ContainsKey(T key)
     {
-        return _items.Exists(x => x.Key!.Equals(key));
+        return _items.ContainsKey(key);
     }
 
     public bool ContainsValue1(U value)
     {
-        return _items.Exists(x => x.Value1!.Equals(value));
+        return _items.Values.Any(x => x.Value1!.Equals(value));
     }
 
     public bool ContainsValue2(V value)
     {
-        return _items.Exists(x => x.Value2!.Equals(value));
+        return _items.Values.Any(x => x.Value2!.Equals(value));
     }
 
     // Індексатор
@@ -43,8 +45,7 @@ public class ExtendedDictionary<T, U, V> : IEnumerable<ExtendedDictionaryElement
     {
         get
         {
-            var item = _items.Find(x => x.Key!.Equals(key));
-            if (item == null)
+            if (!_items.TryGetValue(key, out var item))
                 throw new KeyNotFoundException();
             return item;
         }
@@ -53,7 +54,7 @@ public class ExtendedDictionary<T, U, V> : IEnumerable<ExtendedDictionaryElement
     // foreach
     public IEnumerator<ExtendedDictionaryElement<T, U, V>> GetEnumerator()
     {
-        return _items.GetEnumerator();
+        return _items.Values.GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
